@@ -9,3 +9,5 @@ All other basic requirements were met
 Just open the rails folder and start the server.
 
 Html and css files are in the same folder 
+
+The server is set to run on 127.0.0.1:3000 so is the frontend
