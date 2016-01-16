@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+ <html>
+  <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sign Up Form</title>
+        <link href='http://fonts.googleapis.com/css?family=Nunito:400,300' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="home.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    </head>
+
+
+    <body>
+
+     
+       <h1>Login</h1>
+        
+        <fieldset>
+          
+          <label for="mail">Email:</label>
+          <input type="email" id="mail" name="user_email">
+          
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="user_password">
+          
+        </fieldset>
+        
+        <button id= 'login'>Login</button>
+
+        <button id ='register'>Register</button>
+
+
+
+
+
+
+</div>
+<ul id = 'ha' style="position: absolute; bottom: 5px;">
+</ul> 
+
+
+
+     <script>
+$(document).ready(function(){           // login api
+    $("#login").click(function(){
+        $.post("http://127.0.0.1:3000/api/sessions/",
+        {session:{
+          email: document.getElementById("mail").value,
+          password: document.getElementById("password").value
+        }},
+        function(data,status){
+          //alert("Data: " + data.token + "\nStatus: " + status);
+           window.location = "profile.html?id=" + encodeURIComponent(data.id)+"&token="+encodeURIComponent(data.token);
+            
+        });
+    });
+});
+
+$(document).ready(function(){         //retreive all users
+  $.get( "http://127.0.0.1:3000/api/users/", function( data ) {
+  $( ".result" ).html( data );
+  //alert( "Load was performed." );
+  var items = [];
+
+   $.each(data, function(i, item) {
+
+          items.push('<li><a href="profile.html?id=' + encodeURIComponent(item.user.id) + '">' + item.user.name + '</a></li>');
+
+   });  // close each()
+
+   $('#ha').append( items.join('') );
+});
+});
+$(document).ready(function(){
+    $("#register").click(function(){
+      window.location = "home.html";
+    });
+});
+
+</script>
+    </body>
+
+
+
+</html>

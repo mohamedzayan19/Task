@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+ <html>
+  <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Profile</title>
+        <link href='http://fonts.googleapis.com/css?family=Nunito:400,300' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="home.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    </head>
+
+
+    <body>
+
+	        <fieldset>
+          <label for="title">Title:</label>
+          <input type="text" id="title" name="title">
+          
+          <label for="description">Description:</label>
+          <input type="text" id="description" name="description">
+	<input type="file" id = "asd" name="pic" accept="image/*">
+	<img id="img" src="" />
+	<div id="base"></div>  
+        </fieldset>
+
+<div class="row" id ='row'>
+    <div class="col-md-3"> <a id = '11' href=""><img id = "1"src=""></a><h1 id = '12'></h1> </div>
+    <div class="col-md-3"> <a id = '21' href=""><img id = "2"src=""></a><h1 id = '22'></h1> </div>
+    <div class="col-md-3"> <a id = '31' href=""><img id = "3"src=""></a><h1 id = '32'></h1> </div>
+    <div class="col-md-3"> <a id = '41' href=""><img id = "4"src=""></a><h1 id = '42'></h1> </div>
+    <div class="col-md-3"> <a id = '51' href=""><img id = "5"src=""></a><h1 id = '52'></h1>  </div>
+    <div class="col-md-3"> <a id = '61' href=""><img id = "6"src=""></a><h1 id = '62'></h1> </div>
+    <div class="col-md-3"> <a id = '71' href=""><img id = "7"src=""></a><h1 id = '72'></h1> </div>
+    <div class="col-md-3"> <a id = '81' href=""><img id = "8"src=""></a><h1 id = '82'></h1> </div>
+    <div class="col-md-3"> <a id = '91' href=""><img id = "9"src=""></a><h1 id = '92'></h1>  </div>
+    <div class="col-md-3"> <a id = '101' href=""><img id = "10"src=""></a><h1 id = '102'></h1>  </div>
+    <div class="col-md-3"> <a id = '111' href=""><img id = "11"src=""></a> <h1 id = '112'></h1> </div>
+    <div class="col-md-3"> <a id = '121' href=""><img id = "12"src=""></a> <h1 id = '122'></h1> </div>
+    <div class="col-md-3"> <a id = '131' href=""><img id = "13"src=""></a> <h1 id = '132'></h1> </div>
+    <div class="col-md-3"> <a id = '141' href=""><img id = "14"src=""></a><h1 id = '142'></h1>  </div>
+    <div class="col-md-3"> <a id = '151' href=""><img id = "15"src=""></a> <h1 id = '152'></h1> </div>
+    <div class="col-md-3"> <a id = '161' href=""><img id = "16"src=""></a><h1 id = '162'></h1> </div>
+    <div class="col-md-3"> <a id = '171' href=""><img id = "17"src=""></a><h1 id = '172'></h1>  </div>
+    <div class="col-md-3"> <a id = '181' href=""><img id = "18"src=""></a><h1 id = '182'></h1>  </div>
+
+</div>
+
+<div>
+	<button id = 'logout'></button>
+</div>
+<ul id = 'ha' style="position: absolute; bottom: 5px;">
+</ul> 
+
+
+
+
+
+
+
+     <script>
+
+
+
+
+     var id = 1;
+     var bas;
+     var tokens = getQueryVariable("token");
+  if(tokens === 'undefined' || tokens === null){								// set button to login or logout if logged in or logged out 
+      document.getElementById('logout').innerHTML="Login";
+     }else{
+      document.getElementById('logout').innerHTML="Logout";
+     }
+     var userId = getQueryVariable("id");
+function getQueryVariable(variable) {
+    var query = window.location.search.substring(1);
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) == variable) {
+            return decodeURIComponent(pair[1]);
+        }
+    }
+    console.log('Query variable %s not found', variable);
+}
+
+
+
+
+$(document).ready(function(){																// retreive all pictures of this user
+	$.get( "http://127.0.0.1:3000/api/users/" + userId + "/pictures", function( data ) {
+  $( ".result" ).html( data );
+ // alert( "Load was performed." );
+
+  var items = [];
+
+   $.each(data, function(i, item) {
+
+          document.getElementById(i+1).setAttribute( 'src', item.picture.image_url );
+          document.getElementById(1+((i+1)*10)).setAttribute('href',"picture.html?id="+encodeURIComponent(item.picture.id) + '&token=' + encodeURIComponent(tokens) + '&userId=' + encodeURIComponent(userId));
+          document.getElementById(2+((i+1)*10)).innerHTML = item.picture.title;
+
+   });  // close each()
+
+   
+
+});
+});
+
+$(document).ready(function(){																// retreive all users
+	$.get( "http://127.0.0.1:3000/api/users/", function( data ) {
+  $( ".result" ).html( data );
+ // alert( "Load was performed." );
+  var items = [];
+
+   $.each(data, function(i, item) {
+
+          items.push('<li><a href="profile.html?id=' + encodeURIComponent(item.user.id) + '&token=' + encodeURIComponent(tokens) + '">' + item.user.name + '</a></li>');
+
+   });  // close each()
+
+   $('#ha').append( items.join('') );
+});
+});
+
+
+
+function readImage() {																// upload picture on choosing file
+    if ( this.files && this.files[0] ) {
+        var FR = new FileReader();
+        FR.onload = function(e) {
+            
+bas = e.target.result;
+        $.post("http://127.0.0.1:3000/api/users/" + userId + "/pictures",
+        {
+        	token:tokens,
+          image_url:bas,
+          description:document.getElementById("description").value,
+          title:document.getElementById("title").value
+        },
+        function(data,status){
+          $('#'+id).attr( "src", e.target.result );
+            //alert("Data: " + data + "\nStatus: " + status);
+             id++;
+             $('#base').text( e.target.result );
+             location.reload();
+             
+        });
+        };       
+        FR.readAsDataURL( this.files[0] );
+    }
+}
+
+$("#asd").change( readImage );
+$(document).ready(function(){
+    $("#logout").click(function(){
+       window.location = "login.html"
+    });
+});
+
+
+
+
+
+
+
+
+</script>
+    </body>
+
+
+
+</html>
